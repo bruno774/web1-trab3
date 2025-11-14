@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Moedas - Colecionador</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <!-- NavBar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#home">
+                <i class="bi bi-coin"></i> Galeria de Moedas
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#galeria">Galeria</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#adicionar">Adicionar</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Banner -->
+    <section class="hero-banner py-5 text-white text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">Coleção Pessoal de Moedas</h1>
+            <p class="lead mb-0">Aqui eu organizo e gerencio uma história valiosa</p>
+        </div>
+    </section>
+
+    <!-- Formulário de Adição -->
+    <section id="adicionar" class="py-5 bg-light">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <h2 class="mb-4 text-center">Adicionar Nova Moeda</h2>
+                    <form id="formAdicionar" class="card shadow-sm">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="titulo" class="form-label">Título da Moeda</label>
+                                <input type="text" class="form-control" id="titulo" name="titulo" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="descricao" class="form-label">Descrição</label>
+                                <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="categoria" class="form-label">Categoria</label>
+                                    <select class="form-select" id="categoria" name="categoria" required>
+                                        <option value="">Selecione uma categoria...</option>
+                                        <option value="Antiga">Antiga</option>
+                                        <option value="Medieval">Medieval</option>
+                                        <option value="Moderna">Moderna</option>
+                                        <option value="Contemporânea">Contemporânea</option>
+                                        <option value="Rara">Rara</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="fabricacao" class="form-label">Ano de Fabricação</label>
+                                    <input type="number" class="form-control" id="fabricacao" name="fabricacao" min="1" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="gramatura" class="form-label">Gramatura (g)</label>
+                                    <input type="number" class="form-control" id="gramatura" name="gramatura" step="0.01" min="0" required>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="imagem" class="form-label">URL da Imagem</label>
+                                    <input type="url" class="form-control" id="imagem" name="imagem" required>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100" id="btnSubmit">
+                                <span id="btnText">Adicionar Moeda</span>
+                                <span id="spinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filtro por Categoria -->
+    <section id="galeria" class="py-5">
+        <div class="container">
+            <h2 class="mb-4 text-center">Minhas Moedas</h2>
+
+            <!-- Alert de Feedback -->
+            <div id="feedback" class="alert d-none mb-4" role="alert"></div>
+
+            <div class="mb-4 text-center">
+                <button class="btn btn-outline-secondary me-2 categoria-filter" data-categoria="todas">
+                    Todas
+                </button>
+                <button class="btn btn-outline-secondary me-2 categoria-filter" data-categoria="Antiga">
+                    Antiga
+                </button>
+                <button class="btn btn-outline-secondary me-2 categoria-filter" data-categoria="Medieval">
+                    Medieval
+                </button>
+                <button class="btn btn-outline-secondary me-2 categoria-filter" data-categoria="Moderna">
+                    Moderna
+                </button>
+                <button class="btn btn-outline-secondary me-2 categoria-filter" data-categoria="Contemporânea">
+                    Contemporânea
+                </button>
+                <button class="btn btn-outline-secondary me-2 categoria-filter" data-categoria="Rara">
+                    Rara
+                </button>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="loading" class="text-center mb-4">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Carregando...</span>
+                </div>
+                <p class="mt-2">Carregando coleção...</p>
+            </div>
+
+            <!-- Grid de Itens -->
+            <div id="gridMoedas" class="row g-4">
+                <!-- Cards serão injetados aqui dinamicamente -->
+            </div>
+
+            <!-- Mensagem vazia -->
+            <div id="mensagemVazia" class="text-center text-muted d-none">
+                <p class="fs-5">Nenhuma moeda encontrada nesta categoria.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-0">Galeria de Moedas - Bruno Silva &copy; 2025. Desenvolvido com <i class="bi bi-heart-fill text-danger"></i></p>
+        </div>
+    </footer>
+
+    <!-- Modal para Editar -->
+    <div class="modal fade" id="modalEditar" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Moeda</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditar">
+                        <div class="mb-3">
+                            <label for="editTitulo" class="form-label">Título</label>
+                            <input type="text" class="form-control" id="editTitulo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editDescricao" class="form-label">Descrição</label>
+                            <textarea class="form-control" id="editDescricao" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editCategoria" class="form-label">Categoria</label>
+                            <select class="form-select" id="editCategoria" required>
+                                <option value="Antiga">Antiga</option>
+                                <option value="Medieval">Medieval</option>
+                                <option value="Moderna">Moderna</option>
+                                <option value="Contemporânea">Contemporânea</option>
+                                <option value="Rara">Rara</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editFabricacao" class="form-label">Ano de Fabricação</label>
+                            <input type="number" class="form-control" id="editFabricacao" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editGramatura" class="form-label">Gramatura (g)</label>
+                            <input type="number" class="form-control" id="editGramatura" step="0.01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editImagem" class="form-label">URL da Imagem</label>
+                            <input type="url" class="form-control" id="editImagem" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnSalvarEdicao">Salvar Alterações</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Firebase compat (sem type=module para manter escopo global) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
+    <!-- Scripts da aplicação (sem type=module para acessar firebase globalmente) -->
+    <script src="js/Item.js"></script>
+    <script src="js/MoedaService.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
